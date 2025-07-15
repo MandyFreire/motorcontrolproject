@@ -62,7 +62,7 @@ motorcontrolproject/
 ---
 
 ## Próximos Passos (Opcionais)
-- **Machine Learning**: Usar TensorFlow Lite para substituir PID por rede neural.
+- **Machine Learning**: Usar TensorFlow Lite para substituir PID por rede neural. (em andamento)
 - **Controle Adaptativo**: Ajuste dinâmico dos ganhos PID em tempo real.
 - **IoT**: Controle remoto via ESP32 + MQTT.
 - **Dashboard Web**: Visualização via Node-RED ou ThingsBoard.
