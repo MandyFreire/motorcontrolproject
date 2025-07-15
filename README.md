@@ -24,9 +24,9 @@ motorcontrolproject/
 ├── dashboard/
 │   └── realtime_plot.py
 ├── docs/
-│   ├── hardware.md
-│   └── theory.md
+│   └── ml_theory.md
 └── README.md
+
 ```
 
 ---
