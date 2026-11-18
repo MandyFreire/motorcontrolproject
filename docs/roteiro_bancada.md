@@ -20,7 +20,10 @@ anterior. Tempo estimado: 2 a 3 horas na primeira vez.
 
 ## 1. Montagem
 
-Siga a tabela de [`hardware.md`](hardware.md). Três pontos causam a maioria das falhas:
+Siga o esquema abaixo e a tabela de [`hardware.md`](hardware.md).
+
+![Esquema de ligação](esquema_ligacao.png)
+ Três pontos causam a maioria das falhas:
 
 1. **Jumper de ENA retirado.** ENA vai no pino D9.
 2. **GND da L298N ligado ao GND do Arduino.**
