@@ -90,7 +90,8 @@ precisa de bibliotecas externas.
 ## Da simulação para a bancada
 
 Os ganhos em `arduino/motor_control/parametros_gerados.h` vêm do **modelo didático e não
-servem para um motor real**. Para obter números do seu motor:
+servem para um motor real**. O passo a passo detalhado, com medições, segurança e checklist
+de publicação, está em [`docs/roteiro_bancada.md`](docs/roteiro_bancada.md). Em resumo:
 
 1. Monte o hardware conforme [`docs/hardware.md`](docs/hardware.md). O encoder é obrigatório. Meça R, K, v_max e o número de contagens por volta.
 2. Grave o sketch com `MODO_CONTROLE 0` e registre o ensaio em malha aberta:

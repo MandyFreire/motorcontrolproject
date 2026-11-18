@@ -18,17 +18,16 @@ import numpy as np
 
 from motorlib.controllers import MLPController
 from motorlib.fuzzy import surface_table
-from motorlib.identificacao import carregar_params
+from motorlib.identificacao import _linhas_ultima_execucao, carregar_params
 from motorlib.simulate import TS, Cenario, metricas_degrau, simular
 from motorlib.tuning import make_fuzzy, make_pid
 
 
 def ler(caminho):
     cols = {k: [] for k in ("t_ms", "ref", "w_rad_s", "u_V", "exec_us", "estouros")}
-    with open(caminho, newline="") as f:
-        for linha in csv.DictReader(l for l in f if not l.startswith("#")):
-            for k in cols:
-                cols[k].append(float(linha[k]))
+    for linha in csv.DictReader(_linhas_ultima_execucao(caminho)):
+        for k in cols:
+            cols[k].append(float(linha[k]))
     return {k: np.array(v) for k, v in cols.items()}
 
 

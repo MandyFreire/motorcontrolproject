@@ -148,3 +148,18 @@ def test_identificacao_recupera_J_e_b(real, L_usado):
     assert info["R2"] > 0.99
     assert p.J == pytest.approx(real.J, rel=0.05)
     assert p.b == pytest.approx(real.b, rel=0.05)
+
+
+# ------------------------------------------------------------------ leitura de log de bancada
+def test_log_descarta_execucao_anterior_e_le_vmax(tmp_path):
+    from motorlib.identificacao import ler_csv, vmax_do_log
+    log = tmp_path / "ensaio.csv"
+    log.write_text(
+        "t_ms,ref,w_rad_s,u_V,exec_us,estouros\n"
+        "5350,6.0,9.9,6.0,40,0\n"                       # resto da execução anterior ao reset
+        "# modo=0 Ts_ms=10.00 cpr=2400.00 vmax=12.00\n"
+        "t_ms,ref,w_rad_s,u_V,exec_us,estouros\n"
+        "0,0.0,0.0,0.0,40,0\n10,6.0,0.1,6.0,41,0\n")
+    t, w, u = ler_csv(log)
+    assert list(t) == [0.0, 0.01] and list(u) == [0.0, 6.0]
+    assert vmax_do_log(log) == 12.0

@@ -29,10 +29,13 @@ CAMPOS = ["t_ms", "ref", "w_rad_s", "u_V", "exec_us", "estouros"]
 class Leitor:
     def __init__(self, porta, baud, caminho_csv):
         self.ser = serial.Serial(porta, baud, timeout=0)
-        time.sleep(2.0)                 # abrir a porta reinicia o Uno; espera o bootloader
+        # Abrir a porta reinicia o Uno e o ensaio começa ~1 s depois. Descarta só o que
+        # estava no buffer ANTES do reset; não espera (esperar perderia o início do ensaio).
         self.ser.reset_input_buffer()
         self.buf = b""
         self.csv = open(caminho_csv, "w") if caminho_csv else None
+        if self.csv:  # cabeçalho garantido mesmo que a 1a linha chegue truncada
+            self.csv.write(",".join(CAMPOS) + "\n")
         self.estouros = 0
         self.linhas = 0
 
@@ -45,7 +48,9 @@ class Leitor:
             linha = bruto.decode(errors="replace").strip()
             if not linha:
                 continue
-            if linha.startswith("#") or linha.startswith("t_ms"):
+            if linha.startswith("t_ms"):
+                continue                # cabeçalho já escrito na abertura do arquivo
+            if linha.startswith("#"):
                 if self.csv:
                     self.csv.write(linha + "\n")
                 print(linha)
