@@ -1,82 +1,59 @@
-Controle de Motor DC com Machine Learning (ML)
-Introdução
-O controle clássico de motores DC geralmente é feito por controladores PID ou sistemas fuzzy, que são baseados em regras fixas ou algoritmos matemáticos bem definidos. Entretanto, essas técnicas podem apresentar limitações quando o sistema apresenta não linearidades, ruídos, ou variações inesperadas.
+# Rede neural no controle do motor: o que foi feito e o que dá para afirmar
 
-Machine Learning (ML) surge como uma alternativa que permite que o controlador aprenda o comportamento ideal do sistema a partir de dados, tornando o controle mais adaptativo e robusto a variações.
+## O que foi implementado
 
-Fundamentos do Controle por Machine Learning
-1. Aprendizado Supervisionado
-O modelo ML é treinado com um conjunto de dados históricos, que contém entradas (ex.: erro do sistema, velocidade atual) e saídas desejadas (ex.: sinal de controle).
+**Clonagem de comportamento** (*behavior cloning*): uma MLP 3-8-1 (ReLU, 41 parâmetros)
+treinada para reproduzir a saída do PID sintonizado.
 
-O objetivo é que a rede neural ou outro modelo aprenda a mapear os estados do motor para o sinal de controle ideal.
+| Item | Escolha | Motivo |
+|---|---|---|
+| Entradas | erro, integral do erro, derivada filtrada da medição | são os estados internos do PID; sem o estado integral nenhuma rede reproduz a ação integral e sobra erro em regime |
+| Alvo | tensão do PID antes da saturação | a saturação é aplicada fora da rede, igual ao PID |
+| Dados | 20 episódios × 300 amostras (6.000), em malha fechada, com referência, carga e ruído aleatórios | cobrir o envelope de operação |
+| Validação | 4 episódios inteiros separados | amostras do mesmo episódio são correlacionadas; misturá-las infla a métrica |
+| Embarcado | pesos exportados para C (`parametros_gerados.h`), inferência em float no ATmega328P | uma MLP deste tamanho cabe em C puro, sem framework de inferência |
 
-Essa técnica é útil quando existe um controlador clássico (PID) funcionando e queremos que o ML imite ou melhore esse comportamento.
+## Resultados (modelo CTMS, `results/ctms/metricas.md`)
 
-2. Aprendizado por Reforço (RL)
-O agente (controlador ML) aprende a partir da interação direta com o ambiente (motor).
+- **A rede iguala o PID**, sem superá-lo: as métricas em malha fechada coincidem até a
+  3ª ou 4ª casa decimal nos 4 cenários.
+- **Uma regressão linear acerta o alvo com erro de 8×10⁻¹⁵ V** e recupera os ganhos do
+  PID exatamente. A saída do PID é uma combinação linear dos três estados. A rede gasta
+  41 parâmetros para aprender 3 coeficientes.
+- **A variação entre inicializações é grande.** O erro de validação vai de 0,0003 V a
+  0,27 V entre as sementes 0 e 4. A semente usada (0) é a melhor das cinco, e todas
+  estão registradas em `metricas.md`.
+- **Menos overshoot não é melhor desempenho.** A pior rede (semente 4) tem 0 % de
+  overshoot contra 0,12 % do PID, mas acomoda mais devagar (1,04 s contra 0,98 s) e
+  tem IAE maior. O erro de aproximação funcionou como uma redução de ganho. Se alguém
+  medir "X % menos overshoot" num clone, a explicação mais provável é essa, e ela só
+  aparece quando se olham as outras métricas.
+- **Fora do envelope de treino, a rede falha.** Com 10 episódios, uma divisão deixou a
+  validação com saídas abaixo do mínimo visto no treino, e o erro subiu de ~0,001 para
+  0,45 V. Redes ReLU extrapolam mal. O PID não tem esse problema.
+- **Custo embarcado** (simavr, ATmega328P a 16 MHz): ~1,1 ms em média e 1,5 ms no pior
+  caso por cálculo, contra 0,24 ms do PID. Não cabe numa malha de 1 kHz neste
+  microcontrolador.
 
-Recebe recompensas conforme seu desempenho (ex.: minimizar o erro, economizar energia).
+## O que esta arquitetura NÃO faz
 
-Pode aprender estratégias melhores do que controladores fixos, mas demanda simulações extensas e é mais complexo.
+- **Não se adapta** a mudanças de carga ou de parâmetros: não há aprendizado online nem
+  estado além dos do PID. No cenário J ×2, ela se comporta como o PID clonado, porque é
+  o PID clonado.
+- **Não supera o PID que imitou.** Por construção, o melhor resultado possível é igualá-lo.
 
-Modelos Comuns Usados
-Redes Neurais Feedforward (MLP): Para mapeamento direto de entradas para saídas.
+## Quando faria sentido usar ML aqui
 
-Redes Recorrentes (RNN, LSTM): Para lidar com sequências temporais e dinâmicas do sistema.
+- **Controle adaptativo** de verdade: estimar parâmetros online (mínimos quadrados
+  recursivos, MRAC) ou reajustar ganhos por agendamento (*gain scheduling*).
+- **Aprendizado por reforço** com a planta identificada como simulador, comparado contra
+  o PID sob o mesmo custo, e com garantias de estabilidade discutidas.
+- **Compensar não linearidades** que o PID não trata (zona morta da L298N, atrito de
+  Coulomb), com uma rede em paralelo ao PID, e não no lugar dele.
 
-Redes Convolucionais (CNN): Menos comuns em controle, mais para processamento de sinais complexos.
+## Referências
 
-Modelos híbridos: Combinam controle clássico com ML para maior robustez.
-
-Passos para Aplicação do ML no Controle do Motor DC
-Coleta de Dados: Registre variáveis de entrada e saída do sistema em operação.
-
-Pré-processamento: Limpeza e normalização dos dados.
-
-Treinamento: Ajuste do modelo ML para minimizar o erro entre saída prevista e real.
-
-Validação: Testar o modelo em dados novos e avaliar desempenho.
-
-Implementação: Usar o modelo treinado para controle em tempo real, podendo rodar em PC, microcontrolador ou DSP.
-
-Ajustes e Atualizações: Re-treinar periodicamente para adaptar-se a mudanças no sistema.
-
-Vantagens do Controle ML
-Adaptabilidade a mudanças e perturbações no sistema.
-
-Capacidade de modelar sistemas não lineares complexos.
-
-Redução da necessidade de modelagem matemática precisa.
-
-Desafios do Controle ML
-Necessidade de grandes volumes de dados representativos.
-
-Custo computacional, especialmente para implementação em tempo real.
-
-Dificuldade de interpretar o modelo e garantir estabilidade.
-
-Segurança e confiabilidade em aplicações críticas.
-
-Ferramentas e Bibliotecas Comuns
-TensorFlow / Keras: Para criação e treinamento de redes neurais.
-
-PyTorch: Alternativa popular para deep learning.
-
-TensorFlow Lite: Para rodar modelos ML em microcontroladores.
-
-Scikit-learn: Para modelos mais simples e pré-processamento.
-
-Exemplos de Aplicação
-Controle adaptativo de velocidade em motores DC.
-
-Diagnóstico e predição de falhas.
-
-Otimização de consumo energético.
-
-Referências e Leituras Recomendadas
-Sutton, R.S., & Barto, A.G. — Reinforcement Learning: An Introduction.
-
-Goodfellow, I., Bengio, Y., & Courville, A. — Deep Learning.
-
-Artigos acadêmicos sobre ML aplicado a controle e automação.
-
+- Sutton, R. S.; Barto, A. G. *Reinforcement Learning: An Introduction*, 2ª ed., MIT Press, 2018.
+- Goodfellow, I.; Bengio, Y.; Courville, A. *Deep Learning*, MIT Press, 2016.
+- Åström, K. J.; Hägglund, T. *Advanced PID Control*, ISA, 2006 (anti-windup e filtro da derivada).
+- Control Tutorials for MATLAB & Simulink, University of Michigan – DC Motor Speed.

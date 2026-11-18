@@ -1,0 +1,29 @@
+name: testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install -r requirements.txt
+      - run: python -m pytest -q
+      # roda o pipeline completo (fumaça). Não compara byte a byte com results/: a última
+      # casa decimal do treino da rede pode variar entre CPUs/BLAS.
+      - run: python run_all.py --nome ci
+
+  firmware:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: arduino:avr:uno
+          sketch-paths: |
+            - arduino/motor_control

@@ -1,0 +1,11 @@
+# Versões exatas com que todos os resultados de results/ foram gerados (Python 3.13).
+# Outras versões provavelmente funcionam, mas os números podem variar na última casa.
+numpy==2.5.5
+scipy==1.18.1
+control==0.10.2
+scikit-fuzzy==0.5.0
+networkx==3.7
+scikit-learn==1.9.1
+matplotlib==3.11.2
+pyserial==3.5
+pytest==9.2.0

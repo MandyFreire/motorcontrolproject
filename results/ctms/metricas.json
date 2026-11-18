@@ -1,0 +1,192 @@
+{
+  "controladores": {
+    "pid": {
+      "nominal": {
+        "overshoot_pct": 0.12423509887798988,
+        "subida_10_90_s": 0.5900000000000001,
+        "acomodacao_2pct_s": 0.98,
+        "erro_regime_pct": 3.200590865164275e-05,
+        "IAE": 0.2933034455811548,
+        "ITAE": 0.07585524184036188,
+        "u_max_V": 11.999603907723195,
+        "tempo_saturado_pct": 0.0,
+        "variacao_total_u_V": 5.068457688843421
+      },
+      "carga": {
+        "queda_max_pct": 5.489721868141894,
+        "recuperacao_2pct_s": 0.6000000000000001,
+        "IAE_carga": 0.02195748848408418
+      },
+      "inercia_x2": {
+        "overshoot_pct": 0.0,
+        "subida_10_90_s": 0.78,
+        "acomodacao_2pct_s": 1.3,
+        "erro_regime_pct": 0.0002926072278000969,
+        "IAE": 0.40038560742268103,
+        "ITAE": 0.142671451757151,
+        "u_max_V": 11.989318537522719,
+        "tempo_saturado_pct": 0.0,
+        "variacao_total_u_V": 4.82558067552711
+      },
+      "ruido": {
+        "overshoot_pct": 0.2507307352110792,
+        "subida_10_90_s": 0.63,
+        "acomodacao_2pct_s": 1.11,
+        "erro_regime_pct": 0.07189638884892138,
+        "IAE": 0.3094795343819669,
+        "ITAE": 0.09744240577925703,
+        "u_max_V": 11.922133386679949,
+        "tempo_saturado_pct": 0.0,
+        "variacao_total_u_V": 93.28153902501242
+      }
+    },
+    "fuzzy": {
+      "nominal": {
+        "overshoot_pct": 2.7113184197030744,
+        "subida_10_90_s": 0.53,
+        "acomodacao_2pct_s": 1.21,
+        "erro_regime_pct": 1.5261485858996356e-07,
+        "IAE": 0.3767518259375887,
+        "ITAE": 0.10845466095205962,
+        "u_max_V": 12.0,
+        "tempo_saturado_pct": 1.8333333333333333,
+        "variacao_total_u_V": 16.34946795234505
+      },
+      "carga": {
+        "queda_max_pct": 4.904947121458235,
+        "recuperacao_2pct_s": 0.3599999999999999,
+        "IAE_carga": 0.014265730529602347
+      },
+      "inercia_x2": {
+        "overshoot_pct": 2.764988587844347,
+        "subida_10_90_s": 0.72,
+        "acomodacao_2pct_s": 1.55,
+        "erro_regime_pct": 0.0005517761472131015,
+        "IAE": 0.47897198930740154,
+        "ITAE": 0.18406043022969107,
+        "u_max_V": 12.0,
+        "tempo_saturado_pct": 7.833333333333334,
+        "variacao_total_u_V": 15.50481052304507
+      },
+      "ruido": {
+        "overshoot_pct": 5.125944605648324,
+        "subida_10_90_s": 0.55,
+        "acomodacao_2pct_s": 3.11,
+        "erro_regime_pct": 0.4291913738760803,
+        "IAE": 0.4469085039510067,
+        "ITAE": 0.27647969482039364,
+        "u_max_V": 12.0,
+        "tempo_saturado_pct": 0.5,
+        "variacao_total_u_V": 142.11675646937286
+      }
+    },
+    "mlp": {
+      "nominal": {
+        "overshoot_pct": 0.1240794290972868,
+        "subida_10_90_s": 0.5900000000000001,
+        "acomodacao_2pct_s": 0.98,
+        "erro_regime_pct": 3.209694858698862e-05,
+        "IAE": 0.29330412043195536,
+        "ITAE": 0.07585507086215773,
+        "u_max_V": 11.999403632143016,
+        "tempo_saturado_pct": 0.0,
+        "variacao_total_u_V": 5.069124307177669
+      },
+      "carga": {
+        "queda_max_pct": 5.489220411843052,
+        "recuperacao_2pct_s": 0.6000000000000001,
+        "IAE_carga": 0.021957552006689852
+      },
+      "inercia_x2": {
+        "overshoot_pct": 0.0,
+        "subida_10_90_s": 0.78,
+        "acomodacao_2pct_s": 1.3,
+        "erro_regime_pct": 0.00029318710892112135,
+        "IAE": 0.40039162055155625,
+        "ITAE": 0.14267623268627203,
+        "u_max_V": 11.989199516205503,
+        "tempo_saturado_pct": 0.0,
+        "variacao_total_u_V": 4.825715377657177
+      },
+      "ruido": {
+        "overshoot_pct": 0.2505513658765316,
+        "subida_10_90_s": 0.63,
+        "acomodacao_2pct_s": 1.11,
+        "erro_regime_pct": 0.07178425131228398,
+        "IAE": 0.3094813667180899,
+        "ITAE": 0.0974399818994506,
+        "u_max_V": 11.921365181300738,
+        "tempo_saturado_pct": 0.0,
+        "variacao_total_u_V": 93.42497656077873
+      }
+    }
+  },
+  "pid_original_repositorio": {
+    "overshoot_pct": 0.0,
+    "subida_10_90_s": Infinity,
+    "acomodacao_2pct_s": Infinity,
+    "erro_regime_pct": 71.24778311886195,
+    "IAE": 3.9284683174268484,
+    "ITAE": 11.13868060290816,
+    "u_max_V": 2.5244104258948634,
+    "tempo_saturado_pct": 0.0,
+    "variacao_total_u_V": 1.7212136226980603
+  },
+  "ml": {
+    "amostras_treino": 4800,
+    "amostras_validacao": 1200,
+    "episodios_validacao": [
+      5,
+      9,
+      11,
+      14
+    ],
+    "rmse_treino_V": 0.002741640067605628,
+    "rmse_validacao_V": 0.00034734741553783235,
+    "parametros_treinaveis": 41,
+    "rmse_validacao_regressao_linear_V": 8.072891634279006e-15,
+    "malha_fechada_por_semente (semente 0 = modelo usado)": [
+      {
+        "semente": 0,
+        "rmse_validacao_V": 0.000347,
+        "overshoot_pct": 0.1241,
+        "acomodacao_2pct_s": 0.98,
+        "IAE": 0.2933
+      },
+      {
+        "semente": 1,
+        "rmse_validacao_V": 0.001098,
+        "overshoot_pct": 0.1228,
+        "acomodacao_2pct_s": 0.98,
+        "IAE": 0.2933
+      },
+      {
+        "semente": 2,
+        "rmse_validacao_V": 0.018884,
+        "overshoot_pct": 0.1223,
+        "acomodacao_2pct_s": 0.98,
+        "IAE": 0.2933
+      },
+      {
+        "semente": 3,
+        "rmse_validacao_V": 0.009104,
+        "overshoot_pct": 0.126,
+        "acomodacao_2pct_s": 0.98,
+        "IAE": 0.2933
+      },
+      {
+        "semente": 4,
+        "rmse_validacao_V": 0.267594,
+        "overshoot_pct": 0.0,
+        "acomodacao_2pct_s": 1.04,
+        "IAE": 0.2988
+      }
+    ],
+    "entradas": "[erro, integral do erro, derivada filtrada da medi\u00e7\u00e3o]",
+    "arquitetura": "3-8-1, ReLU, sklearn MLPRegressor (lbfgs)"
+  },
+  "ambiente": {
+    "python": "3.13.18",
+    "numpy": "2.5.5"
+  }
+}
