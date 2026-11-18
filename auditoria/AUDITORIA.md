@@ -168,3 +168,26 @@ J=0,01 b=0,1 K=0,01 R=1 L=0,5), **não identificada para o motor físico e sem c
 - Que fuzzy é "mais robusto" que PID (não testado aqui nem lá).
 - Que a planta representa o motor real (é o modelo didático da U. Michigan).
 - Que os ganhos 100/200/10 são "os corretos" para o seu motor – são do modelo didático.
+
+---
+
+## 5. Status das correções (versão atual do repositório)
+
+| Achado | Correção | Verificação |
+|---|---|---|
+| C1 simulação não executa | `python-control` + simulação discreta em `motorlib/` | todos os scripts executam; `pytest` |
+| C2 tabela irreprodutível | tabela gerada por `run_all.py` a partir de `results/ctms/metricas.json`; rotulada como simulação do modelo CTMS | `results/ctms/` |
+| C3 autotuning degenerado | evolução diferencial com ITAE + restrição de overshoot + penalidade de ruído; mesmo critério para PID e Fuzzy | 3 sementes → mesmos ganhos (4 alg. sig.) |
+| C4 sketch não compila | sketch único `arduino/motor_control/` | compilado com avr-gcc 7.3 + ArduinoCore-avr para ATmega328P, 4 modos, `-Wall -Wextra` sem avisos |
+| C5 IN1/IN2 nunca escritos | `aplicarTensao()` define o sentido a cada amostra | leitura de código |
+| C6 fuzzy Arduino invertido | Arduino usa a mesma superfície 5×5 da simulação (tabela na flash) | `tests/test_paridade_c.py` (C x Python) |
+| C7 ML sem sentido | clonagem do PID com estados corretos, validação por episódio, regressão linear como linha de base, todas as sementes reportadas | `docs/ml_theory.md`, testes |
+| G1 fuzzy incompleto | base 5×5 completa, `linspace`, convenção e = r − y | testes de completude, sinal e antissimetria |
+| G2 sem sensor de velocidade | encoder em quadratura ×4 por interrupção | tabela de transições verificada nos dois sentidos |
+| G3 ganhos sem unidade | firmware trabalha em V e rad/s; ganhos gerados do modelo identificado | `identify_motor.py` + `run_all.py --params` |
+| G4 dashboard | leitura CSV não bloqueante, esvazia o buffer, grava log, alerta de estouro | testado com porta serial simulada (`loop://`) |
+| D1–D7 documentação | `docs/theory.md`, `docs/hardware.md`, `docs/ml_theory.md` e README reescritos; dependências fixadas | – |
+
+**Ainda NÃO verificado:** nenhum ensaio em hardware físico foi feito. O fluxo de bancada
+(ensaio → identificação → sintonia → análise) foi exercitado de ponta a ponta apenas com
+um motor **sintético** emulado, com quantização de encoder e ruído.

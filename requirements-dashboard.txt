@@ -1,0 +1,4 @@
+# Só para a interface gráfica do dashboard (dashboard/realtime_plot.py sem --sem-grafico)
+-r requirements.txt
+pyqtgraph
+PyQt5

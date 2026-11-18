@@ -5,9 +5,11 @@ Uso:
     python auditoria/reproduzir_auditoria.py
 
 Gera auditoria/pid_degrau.png e imprime todas as métricas citadas em AUDITORIA.md.
-Nenhum arquivo original do projeto é modificado.
+Audita a versão ORIGINAL (commit e69d29a): as definições auditadas estão replicadas aqui,
+e arquivos que já foram corrigidos/removidos são lidos do histórico do git.
 """
 import pathlib
+import subprocess
 import warnings
 
 import control as ct
@@ -143,8 +145,12 @@ print("desvio-padrão do setpoint (feature 1):", X[:, 0].std())
 print("max |alvo - 10*feature3| =", np.abs(yml - 10 * X[:, 2]).max(), "-> vazamento de rótulo")
 print("autocorrelação lag-1 da 'velocidade':", round(np.corrcoef(v[:-1], v[1:])[0, 1], 3),
       "(sinal de um sistema dinâmico real seria próximo de 1)")
-print("tamanho de ml_control/trained_model.h5:",
-      (AQUI.parent / "ml_control" / "trained_model.h5").stat().st_size, "byte(s)")
+try:
+    tam = subprocess.run(["git", "cat-file", "-s", "e69d29a:ml_control/trained_model.h5"],
+                         cwd=AQUI, capture_output=True, text=True, check=True).stdout.strip()
+except (subprocess.CalledProcessError, FileNotFoundError):
+    tam = "indisponível (histórico git ausente)"
+print("tamanho de ml_control/trained_model.h5 no commit e69d29a:", tam, "byte(s)")
 
 # ---------------------------------------------------------------------------
 secao("8. Dashboard – vazão serial a 9600 baud (8N1 = 10 bits/caractere)")

@@ -1,0 +1,6 @@
+__pycache__/
+.pytest_cache/
+*.pyc
+# artefatos intermediários do pipeline de ML (regeneráveis por ml_control/*.py)
+ml_control/motor_data.npz
+ml_control/mlp_pesos.json
