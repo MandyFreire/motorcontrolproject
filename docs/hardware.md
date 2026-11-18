@@ -15,6 +15,10 @@ chamava o resultado de RPM, sem nenhum sensor ligado em A0.
 
 ## Ligações
 
+![Esquema de ligação](esquema_ligacao.png)
+
+Versão vetorial: [`esquema_ligacao.svg`](esquema_ligacao.svg).
+
 | L298N / encoder | Arduino | Por quê |
 |---|---|---|
 | ENA | D9 (PWM, Timer1) | **retire o jumper de ENA**, senão o PWM não tem efeito |
