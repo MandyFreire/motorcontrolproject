@@ -40,6 +40,10 @@ Ts = 10 ms · saturação ±12 V · referência 0,799 rad/s · gerados por `pyth
   do cenário.
 - A **MLP** reproduz o PID e não o supera, por construção. Uma regressão linear acerta o
   mesmo alvo com erro de 10⁻¹⁴ V. Detalhes e limitações em [`docs/ml_theory.md`](docs/ml_theory.md).
+- **Cálculo à mão × otimização:** o método IMC/lambda, feito à mão, fica a 9 % do custo
+  ótimo, e o otimizador reencontrou a mesma estrutura (cancelar o polo lento, Kd ≈ 0).
+  Ziegler-Nichols satura e amplifica ruído 21 vezes. Os cálculos passo a passo estão em
+  [`docs/comparacao_sintonia.md`](docs/comparacao_sintonia.md).
 - Os ganhos dependem dos pesos da função custo ([`docs/theory.md`](docs/theory.md), §5).
   Overshoot perto de 5 % reflete a restrição imposta, não uma propriedade do controlador.
 
@@ -56,6 +60,7 @@ analisar_ensaio.py          métricas de um log de bancada, lado a lado com a si
 simulations/
   pid/motor_pid_simulation.py     PID original x sintonizado
   auto_tuning/auto_tune_pid.py    sintonia por evolução diferencial
+  auto_tuning/comparar_metodos.py Ziegler-Nichols e IMC à mão x otimização
   fuzzy/fuzzy_controller.py       base de regras, superfície, malha fechada
   identificacao/identify_motor.py identificação de J e b a partir do ensaio
 ml_control/                 coleta -> treino -> avaliação da MLP
