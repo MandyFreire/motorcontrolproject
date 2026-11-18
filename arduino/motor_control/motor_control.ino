@@ -102,7 +102,8 @@ void setup() {
   mlp_reset(&est_mlp);
   Serial.print(F("# modo=")); Serial.print(MODO_CONTROLE);
   Serial.print(F(" Ts_ms=")); Serial.print(TS_S * 1000.0f);
-  Serial.print(F(" cpr=")); Serial.println(ENC_CPR);
+  Serial.print(F(" cpr=")); Serial.print(ENC_CPR);
+  Serial.print(F(" vmax=")); Serial.println(V_MAX);
   Serial.println(F("t_ms,ref,w_rad_s,u_V,exec_us,estouros"));
   t0_us = micros();
   proximo_us = t0_us + TS_US;

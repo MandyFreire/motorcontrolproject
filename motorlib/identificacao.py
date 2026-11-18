@@ -32,13 +32,31 @@ from scipy.optimize import least_squares
 from .plant import DCMotor, MotorParams
 
 
+def vmax_do_log(caminho):
+    """V_MAX com que o firmware converteu tensão em PWM (linha '# ... vmax=12.00')."""
+    with open(caminho) as f:
+        for linha in f:
+            if linha.startswith("#") and "vmax=" in linha:
+                return float(linha.split("vmax=")[1].split()[0])
+    return None
+
+
+def _linhas_ultima_execucao(caminho):
+    """Linhas de dados após o último '# modo=' (o Arduino imprime essa linha a cada reset).
+    Descarta restos de execuções anteriores que tenham entrado no log."""
+    with open(caminho) as f:
+        linhas = f.read().splitlines()
+    inicio = max((k for k, l in enumerate(linhas) if l.startswith("#") and "modo=" in l), default=-1)
+    cab = next(l for l in linhas if l.startswith("t_ms"))
+    return [cab] + [l for l in linhas[inicio + 1:] if l and not l.startswith(("#", "t_ms"))]
+
+
 def ler_csv(caminho):
     t, w, u = [], [], []
-    with open(caminho, newline="") as f:
-        for linha in csv.DictReader(l for l in f if not l.startswith("#")):
-            t.append(float(linha["t_ms"]) / 1000.0)
-            w.append(float(linha["w_rad_s"]))
-            u.append(float(linha["u_V"]))
+    for linha in csv.DictReader(_linhas_ultima_execucao(caminho)):
+        t.append(float(linha["t_ms"]) / 1000.0)
+        w.append(float(linha["w_rad_s"]))
+        u.append(float(linha["u_V"]))
     return np.array(t), np.array(w), np.array(u)
 
 

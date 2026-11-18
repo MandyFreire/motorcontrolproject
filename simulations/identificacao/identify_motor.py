@@ -15,7 +15,7 @@ import argparse
 import _caminho  # noqa: F401
 import matplotlib.pyplot as plt
 
-from motorlib.identificacao import identificar, ler_csv, salvar_params
+from motorlib.identificacao import identificar, ler_csv, salvar_params, vmax_do_log
 
 
 def main():
@@ -29,6 +29,14 @@ def main():
     a = ap.parse_args()
 
     t, w, u = ler_csv(a.csv)
+    # O firmware registra u = PWM/255 * V_MAX do cabeçalho gerado (12 V no modelo didático).
+    # A tensão real com PWM 100 % é a medida (--v_max): corrige a escala.
+    vmax_fw = vmax_do_log(a.csv)
+    if vmax_fw is None:
+        print("ATENÇÃO: log sem a linha '# ... vmax=' – assumindo que u_V já está em volts reais")
+    elif abs(vmax_fw - a.v_max) > 1e-6:
+        print(f"tensões do log reescaladas: firmware usou V_MAX={vmax_fw:g} V, medido {a.v_max:g} V")
+        u = u * a.v_max / vmax_fw
     p, info, w_fit = identificar(t, w, u, K=a.K, R=a.R, L=a.L, v_max=a.v_max)
     print(f"J = {p.J:.5g} kg.m²   b = {p.b:.5g} N.m.s   ganho DC = {p.dc_gain:.4g} (rad/s)/V")
     print(info)
